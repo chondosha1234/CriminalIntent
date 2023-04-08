@@ -7,10 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chondosha.criminalintent.databinding.FragmentCrimeListBinding
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
-private const val TAG = "CrimeListFragment"
 
 class CrimeListFragment: Fragment() {
 
@@ -22,11 +26,6 @@ class CrimeListFragment: Fragment() {
 
     private val crimeListviewModel: CrimeListViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "Total Crimes: ${crimeListviewModel.crimes.size}")
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,11 +34,18 @@ class CrimeListFragment: Fragment() {
         _binding = FragmentCrimeListBinding.inflate(inflater, container, false)
         binding.crimeRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        val crimes = crimeListviewModel.crimes
-        val adapter = CrimeListAdapter(crimes)
-        binding.crimeRecyclerView.adapter = adapter
-
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                val crimes = crimeListviewModel.loadCrimes()
+                binding.crimeRecyclerView.adapter = CrimeListAdapter(crimes)
+            }
+        }
     }
 
     override fun onDestroyView() {
