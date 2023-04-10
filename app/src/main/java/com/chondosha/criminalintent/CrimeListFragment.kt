@@ -1,7 +1,6 @@
 package com.chondosha.criminalintent
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chondosha.criminalintent.databinding.FragmentCrimeListBinding
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
@@ -43,7 +42,9 @@ class CrimeListFragment: Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 crimeListviewModel.crimes.collect { crimes ->
-                    binding.crimeRecyclerView.adapter = CrimeListAdapter(crimes)
+                    binding.crimeRecyclerView.adapter = CrimeListAdapter(crimes) {crimeId ->
+                        findNavController().navigate(CrimeListFragmentDirections.showCrimeDetail(crimeId))
+                    }
                 }
             }
         }
