@@ -1,9 +1,7 @@
 package com.chondosha.criminalintent
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -30,6 +28,11 @@ class CrimeDetailFragment: Fragment() {
 
     private val crimeDetailViewModel: CrimeDetailViewModel by viewModels {
         CrimeDetailViewModelFactory(args.crimeId)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -77,6 +80,29 @@ class CrimeDetailFragment: Fragment() {
          super.onDestroyView()
          _binding = null
      }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_crime_detail, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.delete_crime -> {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    crimeDetailViewModel.crime.collect {crime ->
+                        if (crime != null) {
+                            crimeDetailViewModel.deleteCrime(crime)
+                            //requireActivity().supportFragmentManager.popBackStack()
+                            findNavController().navigate(CrimeDetailFragmentDirections.deletedCrime())
+                        }
+                    }
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     private fun updateUi(crime: Crime) {
         binding.apply {

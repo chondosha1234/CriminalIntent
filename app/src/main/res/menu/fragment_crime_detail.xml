@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/new_crime"
-        android:icon="@drawable/ic_menu_add"
-        android:title="@string/new_crime"
-        app:showAsAction="ifRoom|withText"/>
+        android:id="@+id/delete_crime"
+        android:icon="@drawable/ic_menu_delete"
+        android:title="Delete Crime"
+        app:showAsAction="ifRoom|withText" />
     
 </menu>

@@ -33,6 +33,10 @@ class CrimeDetailViewModel(crimeId: UUID): ViewModel() {
 
         crime.value?.let { crimeRepository.updateCrime(it)}
     }
+
+    suspend fun deleteCrime(crime: Crime) {
+        crimeRepository.deleteCrime(crime)
+    }
 }
 
 class CrimeDetailViewModelFactory(private val crimeId: UUID) : ViewModelProvider.Factory {
