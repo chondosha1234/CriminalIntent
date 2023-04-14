@@ -1,6 +1,8 @@
 package com.chondosha.criminalintent
 
+import android.nfc.Tag
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -13,6 +15,8 @@ import com.chondosha.criminalintent.databinding.FragmentCrimeListBinding
 import kotlinx.coroutines.launch
 import java.util.*
 
+
+private const val TAG = "CrimeListFragment"
 
 class CrimeListFragment: Fragment() {
 
@@ -36,7 +40,6 @@ class CrimeListFragment: Fragment() {
     ): View? {
         _binding = FragmentCrimeListBinding.inflate(inflater, container, false)
         binding.crimeRecyclerView.layoutManager = LinearLayoutManager(context)
-
         return binding.root
     }
 
